@@ -1,8 +1,9 @@
 package main
+
 import (
 	"fmt"
 	"os"
-	// "n-puzzle/struct"
+	p "n-puzzle/parse"
 )
 
 func main() {
@@ -10,7 +11,7 @@ func main() {
 		fmt.Println(InvalidArgNumber)
 		return
 	}
-	ctx, err := ParseFile(os.Args[1])
+	ctx, err := p.ParseFile(os.Args[1])
 	if err != "" {
 		fmt.Println("error: " + err)
 		return

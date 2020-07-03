@@ -1,4 +1,4 @@
-package main
+package parse
 
 const InvalidArgNumber = "Invalid number of arguments"
 const AtoiError = "Atoi error"
