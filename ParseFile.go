@@ -1,11 +1,12 @@
 package main
+
 import (
-	"fmt"
-	"os"
 	"bufio"
+	"fmt"
+	n "n-puzzle/nstruct"
+	"os"
 	"strconv"
 	"strings"
-	n "n-puzzle/nstruct"
 )
 
 func epur(line string) string {
@@ -28,10 +29,10 @@ func epur(line string) string {
 }
 
 func getNSize(scanner *bufio.Scanner) (int, string) {
-    scanner.Scan()
-    if err := scanner.Err(); err != nil {
-        return 0, ReadError
-    }
+	scanner.Scan()
+	if err := scanner.Err(); err != nil {
+		return 0, ReadError
+	}
 	line := scanner.Text()
 	line = epur(line)
 	tab := strings.Split(line, " ")
@@ -72,17 +73,20 @@ func getPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
 			res[index][j] = nb
 		}
 	}
+	if index+1 != NSize {
+		return res, "Expecting " + fmt.Sprint(NSize) + " lines"
+	}
 	return res, ""
-} 
+}
 
 func ParseFile(filename string) (*n.SContext, string) {
 	ctx := &n.SContext{FileName: filename}
-    file, err := os.Open(filename)
-    if err != nil {
+	file, err := os.Open(filename)
+	if err != nil {
 		return ctx, OpenError
-    }
-    defer file.Close()
-    scanner := bufio.NewScanner(file)
+	}
+	defer file.Close()
+	scanner := bufio.NewScanner(file)
 	var err2 string
 	ctx.NSize, err2 = getNSize(scanner)
 	if err2 != "" {
@@ -94,8 +98,8 @@ func ParseFile(filename string) (*n.SContext, string) {
 	if err2 != "" {
 		return ctx, err2
 	}
-    if err = scanner.Err(); err != nil {
-        return ctx, ReadError
-    }
+	if err = scanner.Err(); err != nil {
+		return ctx, ReadError
+	}
 	return ctx, ""
 }
