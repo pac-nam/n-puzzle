@@ -1,6 +1,6 @@
 package main
 import (
-	// "fmt"
+	"fmt"
 	"os"
 	"bufio"
 	"strconv"
@@ -49,15 +49,30 @@ func getNSize(scanner *bufio.Scanner) (int, string) {
 }
 
 func getPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
-	// res := make([][]int, NSize)
-	// for scanner.Scan() {
-	// 	line := epur(scanner.Text())
-	// 	if len(line) < 1 {
-	// 		continue
-	// 	}
-	// 	tab := strings.Split(line, " ")
-	// }
-	return nil, ""
+	res := make([][]int, NSize)
+	index := -1
+	for scanner.Scan() {
+		line := epur(scanner.Text())
+		if len(line) < 1 {
+			continue
+		}
+		tab := strings.Split(line, " ")
+		index += 1
+		if len(tab) != NSize {
+			return res, "Expecting " + fmt.Sprint(NSize) + " numbers on each line"
+		} else if index >= NSize {
+			return res, "Expecting " + fmt.Sprint(NSize) + " lines"
+		}
+		res[index] = make([]int, NSize)
+		for j, str := range tab {
+			nb, err := strconv.Atoi(str)
+			if err != nil {
+				return res, AtoiError
+			}
+			res[index][j] = nb
+		}
+	}
+	return res, ""
 } 
 
 func ParseFile(filename string) (*n.SContext, string) {
@@ -72,6 +87,8 @@ func ParseFile(filename string) (*n.SContext, string) {
 	ctx.NSize, err2 = getNSize(scanner)
 	if err2 != "" {
 		return ctx, err2
+	} else if ctx.NSize < 2 {
+		return ctx, TooSmall
 	}
 	ctx.Puzzle, err2 = getPuzzle(scanner, ctx.NSize)
 	if err2 != "" {
