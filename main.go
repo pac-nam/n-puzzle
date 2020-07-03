@@ -2,6 +2,7 @@ package main
 import (
 	"fmt"
 	"os"
+	// "n-puzzle/struct"
 )
 
 func main() {
@@ -14,6 +15,6 @@ func main() {
 		fmt.Println("error: " + err)
 		return
 	}
-	Soleve(ctx)
+	// Soleve(ctx)
 	fmt.Println(ctx, "Normal end")
 }

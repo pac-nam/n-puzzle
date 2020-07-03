@@ -1,10 +1,11 @@
 package main
 import (
-	"fmt"
+	// "fmt"
 	"os"
 	"bufio"
 	"strconv"
 	"strings"
+	n "n-puzzle/nstruct"
 )
 
 func epur(line string) string {
@@ -26,7 +27,7 @@ func epur(line string) string {
 	return res
 }
 
-func GetNSize(scanner *bufio.Scanner) (int, string) {
+func getNSize(scanner *bufio.Scanner) (int, string) {
     scanner.Scan()
     if err := scanner.Err(); err != nil {
         return 0, ReadError
@@ -36,7 +37,7 @@ func GetNSize(scanner *bufio.Scanner) (int, string) {
 	tab := strings.Split(line, " ")
 	// fmt.Println(tab, len(tab))
 	if tab[0] == "" {
-		return GetNSize(scanner)
+		return getNSize(scanner)
 	} else if len(tab) > 1 {
 		return 0, InvalidFirstLine
 	}
@@ -47,18 +48,20 @@ func GetNSize(scanner *bufio.Scanner) (int, string) {
 	return nb, ""
 }
 
-func GetPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
-	for scanner.Scan() {
-		line := epur(scanner.Text())
-		if len(line) < 1 {
-			continue
-		}
-	}
+func getPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
+	// res := make([][]int, NSize)
+	// for scanner.Scan() {
+	// 	line := epur(scanner.Text())
+	// 	if len(line) < 1 {
+	// 		continue
+	// 	}
+	// 	tab := strings.Split(line, " ")
+	// }
 	return nil, ""
 } 
 
-func ParseFile(filename string) (*SContext, string) {
-	ctx := &SContext{FileName: filename}
+func ParseFile(filename string) (*n.SContext, string) {
+	ctx := &n.SContext{FileName: filename}
     file, err := os.Open(filename)
     if err != nil {
 		return ctx, OpenError
@@ -66,11 +69,11 @@ func ParseFile(filename string) (*SContext, string) {
     defer file.Close()
     scanner := bufio.NewScanner(file)
 	var err2 string
-	ctx.NSize, err2 = GetNSize(scanner)
+	ctx.NSize, err2 = getNSize(scanner)
 	if err2 != "" {
 		return ctx, err2
 	}
-	ctx.Puzzle, err2 = GetPuzzle(scanner, ctx.NSize)
+	ctx.Puzzle, err2 = getPuzzle(scanner, ctx.NSize)
 	if err2 != "" {
 		return ctx, err2
 	}
