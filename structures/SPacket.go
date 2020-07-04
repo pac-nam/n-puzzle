@@ -1,4 +1,4 @@
-package nstruct
+package structures
 
 import "fmt"
 

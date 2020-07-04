@@ -2,7 +2,7 @@ package parse
 
 import (
 	"bufio"
-	n "n-puzzle/nstruct"
+	s "n-puzzle/structures"
 	"os"
 	"strings"
 )
@@ -26,8 +26,8 @@ func epur(line string) string {
 	return res
 }
 
-func ParseFile(filename string) (*n.SContext, string) {
-	ctx := &n.SContext{FileName: filename}
+func ParseFile(filename string) (*s.SContext, string) {
+	ctx := &s.SContext{}
 	file, err := os.Open(filename)
 	if err != nil {
 		return ctx, OpenError

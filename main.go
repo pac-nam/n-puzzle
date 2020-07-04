@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"os"
+	// s "n-puzzle/structures"
 	p "n-puzzle/parse"
+	// "n-puzzle/solver"
+	"os"
 )
 
 func main() {
@@ -16,6 +18,6 @@ func main() {
 		fmt.Println("error: " + err)
 		return
 	}
-	// Soleve(ctx)
+	// fmt.Println(solver.HeuristicPlacement(ctx))
 	fmt.Println(ctx, "Normal end")
 }
