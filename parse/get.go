@@ -5,12 +5,13 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	m "n-puzzle/messages"
 )
 
 func getNSize(scanner *bufio.Scanner) (int, string) {
 	scanner.Scan()
 	if err := scanner.Err(); err != nil {
-		return 0, ReadError
+		return 0, m.ReadError
 	}
 	line := scanner.Text()
 	line = epur(line)
@@ -18,11 +19,11 @@ func getNSize(scanner *bufio.Scanner) (int, string) {
 	if tab[0] == "" {
 		return getNSize(scanner)
 	} else if len(tab) > 1 {
-		return 0, InvalidFirstLine
+		return 0, m.InvalidFirstLine
 	}
 	nb, err := strconv.Atoi(tab[0])
 	if err != nil {
-		return 0, AtoiError
+		return 0, m.AtoiError
 	}
 	return nb, ""
 }
@@ -46,7 +47,7 @@ func getPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
 		for j, str := range tab {
 			nb, err := strconv.Atoi(str)
 			if err != nil {
-				return res, AtoiError
+				return res, m.AtoiError
 			}
 			res[index][j] = nb
 		}

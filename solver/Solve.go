@@ -2,6 +2,7 @@ package solver
 
 import (
 	s "n-puzzle/structures"
+	// "fmt"
 )
 
 func abs(x int) int {
@@ -11,7 +12,8 @@ func abs(x int) int {
 	return x
 }
 
-func manhattanHeuristic(ctx *s.SContext) int {
+func ManhattanHeuristic(ctx *s.SContext) int {
+	// fmt.Println("hello i am manhattan")
 	score := 0
 	for Y, line := range ctx.Puzzle {
 		for X, nb := range line {
@@ -21,7 +23,7 @@ func manhattanHeuristic(ctx *s.SContext) int {
 	return score
 }
 
-func heuristicPlacement(ctx *s.SContext) int {
+func HeuristicPlacement(ctx *s.SContext) int {
 	score := 0
 	for Y, line := range  ctx.Puzzle {
 		for X, nb := range line {
@@ -31,4 +33,15 @@ func heuristicPlacement(ctx *s.SContext) int {
 		}
 	}
 	return score
+}
+
+func CompleteHeuristic(ctx *s.SContext) int {
+	for Y, line := range  ctx.Puzzle {
+		for X, nb := range line {
+			if ctx.Final[nb].X != X || ctx.Final[nb].Y != Y {
+				return 1
+			}
+		}
+	}
+	return 0
 }

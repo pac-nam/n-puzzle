@@ -5,6 +5,7 @@ import (
 	s "n-puzzle/structures"
 	"os"
 	"strings"
+	m "n-puzzle/messages"
 )
 
 func epur(line string) string {
@@ -26,11 +27,10 @@ func epur(line string) string {
 	return res
 }
 
-func ParseFile(filename string) (*s.SContext, string) {
-	ctx := &s.SContext{}
+func parseFile(ctx *s.SContext, filename string) (*s.SContext, string) {
 	file, err := os.Open(filename)
 	if err != nil {
-		return ctx, OpenError
+		return ctx, m.OpenError
 	}
 	defer file.Close()
 	scanner := bufio.NewScanner(file)
@@ -39,14 +39,14 @@ func ParseFile(filename string) (*s.SContext, string) {
 	if err2 != "" {
 		return ctx, err2
 	} else if ctx.NSize < 2 {
-		return ctx, TooSmall
+		return ctx, m.TooSmall
 	}
 	ctx.Puzzle, err2 = getPuzzle(scanner, ctx.NSize)
 	if err2 != "" {
 		return ctx, err2
 	}
 	if err = scanner.Err(); err != nil {
-		return ctx, ReadError
+		return ctx, m.ReadError
 	}
 	return checkPuzzle(ctx)
 }
