@@ -13,33 +13,33 @@ func abs(x int) int {
 	return x
 }
 
-func ManhattanHeuristic(ctx *s.SContext) int {
+func ManhattanHeuristic(puzzle [][]int, final []s.SVertex) int {
 	// fmt.Println("hello i am manhattan")
 	score := 0
-	for Y, line := range ctx.Puzzle {
+	for Y, line := range puzzle {
 		for X, nb := range line {
-			score += abs(ctx.Final[nb].X - X) + abs(ctx.Final[nb].Y - Y)
+			score += abs(final[nb].X - X) + abs(final[nb].Y - Y)
 		}
 	}
 	return score
 }
 
-func HeuristicPlacement(ctx *s.SContext) int {
+func HeuristicPlacement(puzzle [][]int, final []s.SVertex) int {
 	score := 0
-	for Y, line := range  ctx.Puzzle {
+	for Y, line := range  puzzle {
 		for X, nb := range line {
-			if ctx.Final[nb].X != X || ctx.Final[nb].Y != Y {
-				score += 1
+			if final[nb].X != X || final[nb].Y != Y {
+				score ++
 			}
 		}
 	}
 	return score
 }
 
-func CompleteHeuristic(ctx *s.SContext) int {
-	for Y, line := range  ctx.Puzzle {
+func CompleteHeuristic(puzzle [][]int, final []s.SVertex) int {
+	for Y, line := range  puzzle {
 		for X, nb := range line {
-			if ctx.Final[nb].X != X || ctx.Final[nb].Y != Y {
+			if final[nb].X != X || final[nb].Y != Y {
 				return 1
 			}
 		}
