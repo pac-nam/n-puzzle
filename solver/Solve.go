@@ -2,7 +2,8 @@ package solver
 
 import (
 	s "n-puzzle/structures"
-	// "fmt"
+	"container/list"
+	"fmt"
 )
 
 func abs(x int) int {
@@ -44,4 +45,14 @@ func CompleteHeuristic(ctx *s.SContext) int {
 		}
 	}
 	return 0
+}
+
+func Solve(ctx *s.SContext) {
+	node := s.SNode{Heuristic: ctx.Heuristic, Final: ctx.Final, Puzzle : ctx.Puzzle}
+	lst := list.New()
+	lst.PushFront(node)
+	for e := lst.Front(); e != nil; e = e.Next() {
+		fmt.Println(e.Value)
+	}
+	return
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	// s "n-puzzle/structures"
 	p "n-puzzle/parse"
-	// "n-puzzle/solver"
+	solve "n-puzzle/solver"
 )
 
 func main() {
@@ -16,4 +16,5 @@ func main() {
 	// ctx.Heuristic(ctx)
 	// fmt.Println(solver.HeuristicPlacement(ctx))
 	fmt.Println(ctx, "Normal end")
+	solve.Solve(ctx)
 }
