@@ -41,7 +41,7 @@ func parseFile(ctx *s.SContext, filename string) (*s.SContext, string) {
 	} else if ctx.NSize < 2 {
 		return ctx, m.TooSmall
 	}
-	ctx.Puzzle, err2 = getPuzzle(scanner, ctx.NSize)
+	err2 = getPuzzle(scanner, ctx)
 	if err2 != "" {
 		return ctx, err2
 	}

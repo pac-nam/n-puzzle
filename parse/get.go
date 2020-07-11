@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 	m "n-puzzle/messages"
+	s "n-puzzle/structures"
 )
 
 func getNSize(scanner *bufio.Scanner) (int, string) {
@@ -28,8 +29,8 @@ func getNSize(scanner *bufio.Scanner) (int, string) {
 	return nb, ""
 }
 
-func getPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
-	res := make([][]int, NSize)
+func getPuzzle(scanner *bufio.Scanner, ctx *s.SContext) string {
+	ctx.Puzzle = make([][]int, ctx.NSize)
 	index := -1
 	for scanner.Scan() {
 		line := epur(scanner.Text())
@@ -38,22 +39,25 @@ func getPuzzle(scanner *bufio.Scanner, NSize int) ([][]int, string) {
 		}
 		tab := strings.Split(line, " ")
 		index += 1
-		if len(tab) != NSize {
-			return res, "Expecting " + fmt.Sprint(NSize) + " numbers on each line"
-		} else if index >= NSize {
-			return res, "Expecting " + fmt.Sprint(NSize) + " lines"
+		if len(tab) != ctx.NSize {
+			return "Expecting " + fmt.Sprint(ctx.NSize) + " numbers on each line"
+		} else if index >= ctx.NSize {
+			return "Expecting " + fmt.Sprint(ctx.NSize) + " lines"
 		}
-		res[index] = make([]int, NSize)
+		ctx.Puzzle[index] = make([]int, ctx.NSize)
 		for j, str := range tab {
 			nb, err := strconv.Atoi(str)
 			if err != nil {
-				return res, m.AtoiError
+				return m.AtoiError
 			}
-			res[index][j] = nb
+			ctx.Puzzle[index][j] = nb
+			if nb == 0 {
+				ctx.Zero = s.SVertex{Y: index, X: j}
+			}
 		}
 	}
-	if index+1 != NSize {
-		return res, "Expecting " + fmt.Sprint(NSize) + " lines"
+	if index+1 != ctx.NSize {
+		return "Expecting " + fmt.Sprint(ctx.NSize) + " lines"
 	}
-	return res, ""
+	return ""
 }
