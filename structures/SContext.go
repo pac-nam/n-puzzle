@@ -5,11 +5,11 @@ import (
 )
 
 type SContext struct {
-	// FileName		string				// string passed in first command line argument
+	// FileName		string						// string passed in first command line argument
 	Heuristic		func([][]int, []SVertex)int	// pointer to the heuristic function choosed by user
-	Puzzle			[][]int 			// puzzle grid
-	Final			[]SVertex			// slice filled with coordinates of completed puzzle
-	NSize			int					// size of the puzzle (NSize * NSize)
+	Puzzle			[][]int 					// puzzle grid
+	Final			[]SVertex					// slice filled with coordinates of completed puzzle
+	NSize			int							// size of the puzzle (NSize * NSize)
 }
 
 func (ctx SContext) String() string {

@@ -5,9 +5,9 @@ import (
 )
 
 type SNode struct {
-    Final       []SVertex          // slice filled with coordinates of completed puzzle
-    Puzzle      [][]int             // puzzle grid
-    Heuristic   func([][]int, []SVertex)int  // pointer to the heuristic function choosed by user
+    Final       []SVertex                   // slice filled with coordinates of completed puzzle
+    Puzzle      [][]int                     // puzzle grid
+    Heuristic   func([][]int, []SVertex)int // pointer to the heuristic function choosed by user
 }
 
 func (node SNode) String() string {
