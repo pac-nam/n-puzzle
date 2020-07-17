@@ -1,9 +1,9 @@
 package solver
 
 import (
-	s "n-puzzle/structures"
 	l "container/list"
 	"fmt"
+	s "n-puzzle/structures"
 )
 
 func abs(x int) int {
@@ -18,7 +18,7 @@ func ManhattanHeuristic(puzzle [][]int, final []s.SVertex) int {
 	score := 0
 	for Y, line := range puzzle {
 		for X, nb := range line {
-			score += abs(final[nb].X - X) + abs(final[nb].Y - Y)
+			score += abs(final[nb].X-X) + abs(final[nb].Y-Y)
 		}
 	}
 	return score
@@ -26,10 +26,10 @@ func ManhattanHeuristic(puzzle [][]int, final []s.SVertex) int {
 
 func HeuristicPlacement(puzzle [][]int, final []s.SVertex) int {
 	score := 0
-	for Y, line := range  puzzle {
+	for Y, line := range puzzle {
 		for X, nb := range line {
 			if final[nb].X != X || final[nb].Y != Y {
-				score ++
+				score++
 			}
 		}
 	}
@@ -37,7 +37,7 @@ func HeuristicPlacement(puzzle [][]int, final []s.SVertex) int {
 }
 
 func CompleteHeuristic(puzzle [][]int, final []s.SVertex) int {
-	for Y, line := range  puzzle {
+	for Y, line := range puzzle {
 		for X, nb := range line {
 			if final[nb].X != X || final[nb].Y != Y {
 				return 1
@@ -55,21 +55,23 @@ func testHeuristic(node s.SNode, lst l.List) l.List {
 	if zero.X != 0 {
 		puzzleXL := NodeCopyPuzzle(node.Puzzle, node.Size)
 		tmp := puzzleXL[zero.Y][zero.X]
-		puzzleXL[zero.Y][zero.X] = puzzleXL[zero.Y][zero.X - 1]
-		puzzleXL[zero.Y][zero.X - 1] = tmp
+		puzzleXL[zero.Y][zero.X] = puzzleXL[zero.Y][zero.X-1]
+		puzzleXL[zero.Y][zero.X-1] = tmp
 		heurisXL = node.Heuristic(puzzleXL, node.Final)
-		newNode := NewNextNode(puzzleXL, s.SVertex{X : zero.X - 1, Y : zero.Y}, node)
-		newNode.ValHeuris = heurisXL
+		newNode := NewNextNode(puzzleXL, s.SVertex{X: zero.X - 1, Y: zero.Y}, node)
+		newNode.Cost++
+		newNode.ValHeuris = heurisXL + newNode.Cost
 		subLst.PushBack(newNode)
 	}
-	if zero.X != node.Size - 1 {
+	if zero.X != node.Size-1 {
 		puzzleXR := NodeCopyPuzzle(node.Puzzle, node.Size)
 		tmp := puzzleXR[zero.Y][zero.X]
-		puzzleXR[zero.Y][zero.X] = puzzleXR[zero.Y][zero.X + 1]
-		puzzleXR[zero.Y][zero.X + 1] = tmp
+		puzzleXR[zero.Y][zero.X] = puzzleXR[zero.Y][zero.X+1]
+		puzzleXR[zero.Y][zero.X+1] = tmp
 		heurisXR = node.Heuristic(puzzleXR, node.Final)
-		newNode := NewNextNode(puzzleXR, s.SVertex{X : zero.X + 1, Y : zero.Y}, node)
-		newNode.ValHeuris = heurisXR
+		newNode := NewNextNode(puzzleXR, s.SVertex{X: zero.X + 1, Y: zero.Y}, node)
+		newNode.Cost++
+		newNode.ValHeuris = heurisXR + newNode.Cost
 		if heurisXL > heurisXR {
 			subLst.PushFront(newNode)
 		} else {
@@ -79,15 +81,16 @@ func testHeuristic(node s.SNode, lst l.List) l.List {
 	if zero.Y != 0 {
 		puzzleYL := NodeCopyPuzzle(node.Puzzle, node.Size)
 		tmp := puzzleYL[zero.Y][zero.X]
-		puzzleYL[zero.Y][zero.X] = puzzleYL[zero.Y - 1][zero.X]
-		puzzleYL[zero.Y - 1][zero.X] = tmp
+		puzzleYL[zero.Y][zero.X] = puzzleYL[zero.Y-1][zero.X]
+		puzzleYL[zero.Y-1][zero.X] = tmp
 		heurisYL = node.Heuristic(puzzleYL, node.Final)
-		newNode := NewNextNode(puzzleYL, s.SVertex{X : zero.X, Y : zero.Y - 1}, node)
-		newNode.ValHeuris = heurisYL
+		newNode := NewNextNode(puzzleYL, s.SVertex{X: zero.X, Y: zero.Y - 1}, node)
+		newNode.Cost++
+		newNode.ValHeuris = heurisYL + newNode.Cost
 		isNil := true
 		for e := subLst.Front(); e != nil; e = e.Next() {
 			val := e.Value.(s.SNode)
-			if (val.ValHeuris >= heurisYL) {
+			if val.ValHeuris >= heurisYL {
 				subLst.InsertBefore(newNode, e)
 				isNil = false
 				break
@@ -97,18 +100,19 @@ func testHeuristic(node s.SNode, lst l.List) l.List {
 			subLst.PushBack(newNode)
 		}
 	}
-	if zero.Y != node.Size - 1 {
+	if zero.Y != node.Size-1 {
 		puzzleYR := NodeCopyPuzzle(node.Puzzle, node.Size)
 		tmp := puzzleYR[zero.Y][zero.X]
-		puzzleYR[zero.Y][zero.X] = puzzleYR[zero.Y + 1][zero.X]
-		puzzleYR[zero.Y + 1][zero.X] = tmp
+		puzzleYR[zero.Y][zero.X] = puzzleYR[zero.Y+1][zero.X]
+		puzzleYR[zero.Y+1][zero.X] = tmp
 		heurisYR = node.Heuristic(puzzleYR, node.Final)
-		newNode := NewNextNode(puzzleYR, s.SVertex{X : zero.X, Y : zero.Y + 1}, node)
-		newNode.ValHeuris = heurisYR
+		newNode := NewNextNode(puzzleYR, s.SVertex{X: zero.X, Y: zero.Y + 1}, node)
+		newNode.Cost++
+		newNode.ValHeuris = heurisYR + newNode.Cost
 		isNil := true
 		for e := subLst.Front(); e != nil; e = e.Next() {
 			val := e.Value.(s.SNode)
-			if (val.ValHeuris >= heurisYR) {
+			if val.ValHeuris >= heurisYR {
 				subLst.InsertBefore(newNode, e)
 				isNil = false
 				break
@@ -118,16 +122,14 @@ func testHeuristic(node s.SNode, lst l.List) l.List {
 			subLst.PushBack(newNode)
 		}
 	}
-	for e := subLst.Front() ; e != nil; e = e.Next() {
+	for e := subLst.Front(); e != nil; e = e.Next() {
 		fmt.Println(e.Value)
 	}
-	fmt.Println("ok", heurisXL, heurisXR, heurisYL, heurisYR)
 	return lst
 }
 
-
 func Solve(ctx s.SContext) {
-	
+
 	lst := l.New()
 	// lst.PushFront(node)
 	testHeuristic(NewNode(ctx), *lst)
