@@ -3,10 +3,10 @@ package parse
 import (
 	"bufio"
 	"fmt"
-	"strconv"
-	"strings"
 	m "n-puzzle/messages"
 	s "n-puzzle/structures"
+	"strconv"
+	"strings"
 )
 
 func getNSize(scanner *bufio.Scanner) (int, string) {
@@ -30,7 +30,7 @@ func getNSize(scanner *bufio.Scanner) (int, string) {
 }
 
 func getPuzzle(scanner *bufio.Scanner, ctx *s.SContext) string {
-	ctx.Puzzle = make([][]int, ctx.NSize)
+	ctx.Puzzle = make([][]uint16, ctx.NSize)
 	index := -1
 	for scanner.Scan() {
 		line := epur(scanner.Text())
@@ -44,13 +44,13 @@ func getPuzzle(scanner *bufio.Scanner, ctx *s.SContext) string {
 		} else if index >= ctx.NSize {
 			return "Expecting " + fmt.Sprint(ctx.NSize) + " lines"
 		}
-		ctx.Puzzle[index] = make([]int, ctx.NSize)
+		ctx.Puzzle[index] = make([]uint16, ctx.NSize)
 		for j, str := range tab {
 			nb, err := strconv.Atoi(str)
 			if err != nil {
 				return m.AtoiError
 			}
-			ctx.Puzzle[index][j] = nb
+			ctx.Puzzle[index][j] = uint16(nb)
 			if nb == 0 {
 				ctx.Zero = s.SVertex{Y: index, X: j}
 			}

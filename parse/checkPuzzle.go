@@ -1,9 +1,10 @@
 package parse
 
 import (
-	s "n-puzzle/structures"
 	"fmt"
+	s "n-puzzle/structures"
 )
+
 func createFinal(ctx *s.SContext) []s.SVertex {
 	X, Xmin, Xmax, Y, Ymin, Ymax := 0, 0, ctx.NSize-1, 0, 1, ctx.NSize-1
 	square := ctx.NSize * ctx.NSize
@@ -39,8 +40,8 @@ func createFinal(ctx *s.SContext) []s.SVertex {
 }
 
 func checkPuzzle(ctx *s.SContext) (*s.SContext, string) {
-	check := make([]bool, ctx.NSize * ctx.NSize)
-	max := ctx.NSize * ctx.NSize - 1
+	check := make([]bool, ctx.NSize*ctx.NSize)
+	max := uint16(ctx.NSize*ctx.NSize - 1)
 	for _, line := range ctx.Puzzle {
 		for _, nb := range line {
 			if nb < 0 || nb > max {
