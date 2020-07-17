@@ -1,11 +1,11 @@
 package parse
 
 import (
+	m "n-puzzle/messages"
+	"n-puzzle/solver"
+	s "n-puzzle/structures"
 	"os"
 	"strings"
-	s "n-puzzle/structures"
-	"n-puzzle/solver"
-	m "n-puzzle/messages"
 )
 
 func heuristicType(ctx *s.SContext, arg string) string {
