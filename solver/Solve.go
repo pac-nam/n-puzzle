@@ -1,34 +1,34 @@
 package solver
 
 import (
-	l "container/list"
-	"fmt"
+	// l "container/list"
+	// "fmt"
 	s "n-puzzle/structures"
 )
 
-func abs(x int) int {
+func Abs(x int) int {
 	if x < 0 {
 		return -x
 	}
 	return x
 }
 
-func ManhattanHeuristic(puzzle [][]int, final []s.SVertex) int {
+func ManhattanHeuristic(puzzle [][]s.Tnumber, final []s.SVertex) int {
 	// fmt.Println("hello i am manhattan")
 	score := 0
 	for Y, line := range puzzle {
 		for X, nb := range line {
-			score += abs(final[nb].X-X) + abs(final[nb].Y-Y)
+			score += Abs(int(final[nb].X)-X) + Abs(int(final[nb].Y)-Y)
 		}
 	}
 	return score
 }
 
-func HeuristicPlacement(puzzle [][]int, final []s.SVertex) int {
+func HeuristicPlacement(puzzle [][]s.Tnumber, final []s.SVertex) int {
 	score := 0
 	for Y, line := range puzzle {
 		for X, nb := range line {
-			if final[nb].X != X || final[nb].Y != Y {
+			if int(final[nb].X) != X || int(final[nb].Y) != Y {
 				score++
 			}
 		}
@@ -36,105 +36,13 @@ func HeuristicPlacement(puzzle [][]int, final []s.SVertex) int {
 	return score
 }
 
-func CompleteHeuristic(puzzle [][]int, final []s.SVertex) int {
+func CompleteHeuristic(puzzle [][]s.Tnumber, final []s.SVertex) int {
 	for Y, line := range puzzle {
 		for X, nb := range line {
-			if final[nb].X != X || final[nb].Y != Y {
+			if int(final[nb].X) != X || int(final[nb].Y) != Y {
 				return 1
 			}
 		}
 	}
 	return 0
-}
-
-func testHeuristic(node s.SNode, lst l.List) l.List {
-	heurisXL, heurisXR, heurisYR, heurisYL := -1, -1, -1, -1
-	zero := node.Zero
-	subLst := l.New()
-	lst.PushBack(subLst)
-	if zero.X != 0 {
-		puzzleXL := NodeCopyPuzzle(node.Puzzle, node.Size)
-		tmp := puzzleXL[zero.Y][zero.X]
-		puzzleXL[zero.Y][zero.X] = puzzleXL[zero.Y][zero.X-1]
-		puzzleXL[zero.Y][zero.X-1] = tmp
-		heurisXL = node.Heuristic(puzzleXL, node.Final)
-		newNode := NewNextNode(puzzleXL, s.SVertex{X: zero.X - 1, Y: zero.Y}, node)
-		newNode.Cost++
-		newNode.ValHeuris = heurisXL + newNode.Cost
-		subLst.PushBack(newNode)
-	}
-	if zero.X != node.Size-1 {
-		puzzleXR := NodeCopyPuzzle(node.Puzzle, node.Size)
-		tmp := puzzleXR[zero.Y][zero.X]
-		puzzleXR[zero.Y][zero.X] = puzzleXR[zero.Y][zero.X+1]
-		puzzleXR[zero.Y][zero.X+1] = tmp
-		heurisXR = node.Heuristic(puzzleXR, node.Final)
-		newNode := NewNextNode(puzzleXR, s.SVertex{X: zero.X + 1, Y: zero.Y}, node)
-		newNode.Cost++
-		newNode.ValHeuris = heurisXR + newNode.Cost
-		if heurisXL > heurisXR {
-			subLst.PushFront(newNode)
-		} else {
-			subLst.PushBack(newNode)
-		}
-	}
-	if zero.Y != 0 {
-		puzzleYL := NodeCopyPuzzle(node.Puzzle, node.Size)
-		tmp := puzzleYL[zero.Y][zero.X]
-		puzzleYL[zero.Y][zero.X] = puzzleYL[zero.Y-1][zero.X]
-		puzzleYL[zero.Y-1][zero.X] = tmp
-		heurisYL = node.Heuristic(puzzleYL, node.Final)
-		newNode := NewNextNode(puzzleYL, s.SVertex{X: zero.X, Y: zero.Y - 1}, node)
-		newNode.Cost++
-		newNode.ValHeuris = heurisYL + newNode.Cost
-		isNil := true
-		for e := subLst.Front(); e != nil; e = e.Next() {
-			val := e.Value.(s.SNode)
-			if val.ValHeuris >= heurisYL {
-				subLst.InsertBefore(newNode, e)
-				isNil = false
-				break
-			}
-		}
-		if isNil == true {
-			subLst.PushBack(newNode)
-		}
-	}
-	if zero.Y != node.Size-1 {
-		puzzleYR := NodeCopyPuzzle(node.Puzzle, node.Size)
-		tmp := puzzleYR[zero.Y][zero.X]
-		puzzleYR[zero.Y][zero.X] = puzzleYR[zero.Y+1][zero.X]
-		puzzleYR[zero.Y+1][zero.X] = tmp
-		heurisYR = node.Heuristic(puzzleYR, node.Final)
-		newNode := NewNextNode(puzzleYR, s.SVertex{X: zero.X, Y: zero.Y + 1}, node)
-		newNode.Cost++
-		newNode.ValHeuris = heurisYR + newNode.Cost
-		isNil := true
-		for e := subLst.Front(); e != nil; e = e.Next() {
-			val := e.Value.(s.SNode)
-			if val.ValHeuris >= heurisYR {
-				subLst.InsertBefore(newNode, e)
-				isNil = false
-				break
-			}
-		}
-		if isNil == true {
-			subLst.PushBack(newNode)
-		}
-	}
-	for e := subLst.Front(); e != nil; e = e.Next() {
-		fmt.Println(e.Value)
-	}
-	return lst
-}
-
-func Solve(ctx s.SContext) {
-
-	lst := l.New()
-	// lst.PushFront(node)
-	testHeuristic(NewNode(ctx), *lst)
-	// for e := lst.Front(); e != nil; e = e.Next() {
-	// 	fmt.Println(e.Value)
-	// }
-	return
 }

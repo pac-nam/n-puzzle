@@ -12,7 +12,7 @@ const (
 	EAST = 1 << iota
 )
 
-func whereToGo(puzzle [][]uint16, X, Y, NSize, last uint16) (uint8, uint8) {
+func whereToGo(puzzle [][]s.Tnumber, X, Y, NSize, last s.Tnumber) (uint8, uint8) {
 	var NSWE, pathNb uint8 = 0, 0
 	if Y != 0 && puzzle[Y-1][X] != last {
 		NSWE |= NORTH
@@ -33,7 +33,7 @@ func whereToGo(puzzle [][]uint16, X, Y, NSize, last uint16) (uint8, uint8) {
 	return NSWE, pathNb
 }
 
-func error(path []uint16) bool {
+func error(path []s.Tnumber) bool {
 	for _, nb := range path {
 		if nb == 0 {
 			return true

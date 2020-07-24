@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func getNSize(scanner *bufio.Scanner) (int, string) {
+func getNSize(scanner *bufio.Scanner) (s.Tnumber, string) {
 	scanner.Scan()
 	if err := scanner.Err(); err != nil {
 		return 0, m.ReadError
@@ -26,11 +26,11 @@ func getNSize(scanner *bufio.Scanner) (int, string) {
 	if err != nil {
 		return 0, m.AtoiError
 	}
-	return nb, ""
+	return s.Tnumber(nb), ""
 }
 
 func getPuzzle(scanner *bufio.Scanner, ctx *s.SContext) string {
-	ctx.Puzzle = make([][]uint16, ctx.NSize)
+	ctx.Puzzle = make([][]s.Tnumber, ctx.NSize)
 	index := -1
 	for scanner.Scan() {
 		line := epur(scanner.Text())
@@ -39,24 +39,24 @@ func getPuzzle(scanner *bufio.Scanner, ctx *s.SContext) string {
 		}
 		tab := strings.Split(line, " ")
 		index += 1
-		if len(tab) != ctx.NSize {
+		if len(tab) != int(ctx.NSize) {
 			return "Expecting " + fmt.Sprint(ctx.NSize) + " numbers on each line"
-		} else if index >= ctx.NSize {
+		} else if index >= int(ctx.NSize) {
 			return "Expecting " + fmt.Sprint(ctx.NSize) + " lines"
 		}
-		ctx.Puzzle[index] = make([]uint16, ctx.NSize)
+		ctx.Puzzle[index] = make([]s.Tnumber, ctx.NSize)
 		for j, str := range tab {
 			nb, err := strconv.Atoi(str)
 			if err != nil {
 				return m.AtoiError
 			}
-			ctx.Puzzle[index][j] = uint16(nb)
+			ctx.Puzzle[index][j] = s.Tnumber(nb)
 			if nb == 0 {
-				ctx.Zero = s.SVertex{Y: index, X: j}
+				ctx.Zero = s.SVertex{Y: s.Tnumber(index), X: s.Tnumber(j)}
 			}
 		}
 	}
-	if index+1 != ctx.NSize {
+	if index+1 != int(ctx.NSize) {
 		return "Expecting " + fmt.Sprint(ctx.NSize) + " lines"
 	}
 	return ""

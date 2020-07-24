@@ -5,10 +5,10 @@ import (
     // "fmt"
 )
 
-func CopyPuzzle(puzzle [][]uint16, Size uint16) [][]uint16 {
-    newPuzzle := make([][]uint16, Size)
+func CopyPuzzle(puzzle [][]s.Tnumber, Size s.Tnumber) [][]s.Tnumber {
+    newPuzzle := make([][]s.Tnumber, Size)
     for Y, line := range puzzle {
-        newPuzzle[Y] = make([]uint16, Size)
+        newPuzzle[Y] = make([]s.Tnumber, Size)
         for X, nb := range line {
             newPuzzle[Y][X] = nb
         }
@@ -16,15 +16,15 @@ func CopyPuzzle(puzzle [][]uint16, Size uint16) [][]uint16 {
     return newPuzzle
 }
 
-func PathCopy(path []uint16) []uint16 {
-	tmp := make([]uint16, len(path))
+func PathCopy(path []s.Tnumber) []s.Tnumber {
+	tmp := make([]s.Tnumber, len(path))
 	copy(tmp, path)
 	// fmt.Println("old: ", path, "\nnew: ", tmp, "\n")
 	return tmp
 }
 
 func CopyNode(node *s.SNode) *s.SNode {
-    tmp := make([]uint16, len(node.Path))
+    tmp := make([]s.Tnumber, len(node.Path))
     copy(tmp, node.Path)
 	return &s.SNode {
 		Ctx:		node.Ctx,

@@ -5,23 +5,20 @@ import (
 )
 
 type SNode struct {
-	Cost      int
-	ValHeuris int                          // value of current heuristic
-	Zero      SVertex                      // coordinates of zero square
-	Size      int                          // size of the puzzle (NSize * NSize)
-	Puzzle    [][]int                      // puzzle grid
-	Heuristic func([][]int, []SVertex) int // pointer to the heuristic function choosed by user
-	Final     []SVertex                    // slice filled with coordinates of completed puzzle
+	Ctx			*SContext
+	Cost		int
+	Zero		SVertex							// coordinates of zero square
+	Puzzle		[][]Tnumber						// puzzle grid
+	Path		[]Tnumber
 }
 
 func (node SNode) String() string {
 	res := "---------------Snode---------------\n"
-	res += "Heuristique : " + fmt.Sprint(node.ValHeuris) + "\n"
 	res += "Cost : " + fmt.Sprint(node.Cost) + "\n"
-	res += "Size : " + fmt.Sprint(node.Size) + "\n"
-	res += "Final : " + fmt.Sprint(node.Final) + "\n"
+	// res += "Size : " + fmt.Sprint(node.Ctx.NSize) + "\n"
+	// res += "Final : " + fmt.Sprint(node.Ctx.Final) + "\n"
 	res += "Puzzle: {\n"
-	formatPuzzle := "%03d "
+	formatPuzzle := "%02d "
 	for _, tab := range node.Puzzle {
 		res += "\t"
 		for _, nb := range tab {
@@ -30,5 +27,6 @@ func (node SNode) String() string {
 		res += "\n"
 	}
 	res += "}\nZero : " + fmt.Sprint(node.Zero) + "\n"
+	res += "Path: " + fmt.Sprint(node.Path)
 	return res
 }

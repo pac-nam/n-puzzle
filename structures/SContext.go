@@ -4,13 +4,17 @@ import (
 	"fmt"
 )
 
+type Tnumber uint16
+
 type SContext struct {
 	// FileName		string						// string passed in first command line argument
-	Zero			SVertex						// coordinates of zero square
-	Heuristic		func([][]int, []SVertex)int	// pointer to the heuristic function choosed by user
+	Heuristic		func([][]Tnumber, []SVertex)int	// pointer to the heuristic function choosed by user
 	Final			[]SVertex					// slice filled with coordinates of completed puzzle
-	Puzzle			[][]int 					// puzzle grid
-	NSize			int							// size of the puzzle (NSize * NSize)
+	NSize			Tnumber							// size of the puzzle (NSize * NSize)
+	ResultChan		chan SResult
+	RequestChan		chan SRequest
+	Puzzle			[][]Tnumber 					// puzzle grid
+	Zero			SVertex						// coordinates of zero square
 }
 
 func (ctx SContext) String() string {

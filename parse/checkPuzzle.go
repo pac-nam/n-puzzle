@@ -6,7 +6,7 @@ import (
 	s "n-puzzle/structures"
 )
 
-func distHeuristic(puzzle [][]uint16, final []s.SVertex) int {
+func distHeuristic(puzzle [][]s.Tnumber, final []s.SVertex) int {
 	x0, y0 := 0, 0
 	for Y, line := range puzzle {
 		for X, nb := range line {
@@ -17,11 +17,11 @@ func distHeuristic(puzzle [][]uint16, final []s.SVertex) int {
 			}
 		}
 	}
-	return (solv.Abs(final[0].X-x0) + solv.Abs(final[0].Y-y0))
+	return (solv.Abs(int(final[0].X)-x0) + solv.Abs(int(final[0].Y)-y0))
 }
 
 func checkSolved(ctx *s.SContext) bool {
-	cPuzzle := solv.NodeCopyPuzzle(ctx.Puzzle, ctx.NSize)
+	cPuzzle := solv.CopyPuzzle(ctx.Puzzle, ctx.NSize)
 	dist := distHeuristic(cPuzzle, ctx.Final)
 	nbSwap := 0
 	pair := dist % 2
@@ -31,10 +31,10 @@ func checkSolved(ctx *s.SContext) bool {
 	}
 	for nb := ctx.NSize*ctx.NSize - 1; nb > 0; nb-- {
 		y0, x0 := 0, 0
-		if cPuzzle[ctx.Final[nb].Y][ctx.Final[nb].X] != uint16(nb) {
+		if cPuzzle[ctx.Final[nb].Y][ctx.Final[nb].X] != s.Tnumber(nb) {
 			for Y, line := range cPuzzle {
 				for X, i := range line {
-					if i == uint16(nb) {
+					if i == s.Tnumber(nb) {
 						y0 = Y
 						x0 = X
 						break
@@ -52,10 +52,10 @@ func checkSolved(ctx *s.SContext) bool {
 }
 
 func createFinal(ctx *s.SContext) []s.SVertex {
-	X, Xmin, Xmax, Y, Ymin, Ymax := 0, 0, ctx.NSize-1, 0, 1, ctx.NSize-1
-	square := ctx.NSize * ctx.NSize
+	var X, Xmin, Xmax, Y, Ymin, Ymax s.Tnumber = 0, 0, ctx.NSize-1, 0, 1, ctx.NSize-1
+	var square, i s.Tnumber = ctx.NSize * ctx.NSize, 1
 	final := make([]s.SVertex, square)
-	for i := 1; i < square; {
+	for i < square {
 		for X < Xmax {
 			final[i] = s.SVertex{X: X, Y: Y}
 			X++
@@ -87,7 +87,7 @@ func createFinal(ctx *s.SContext) []s.SVertex {
 
 func checkPuzzle(ctx *s.SContext) (*s.SContext, string) {
 	check := make([]bool, ctx.NSize*ctx.NSize)
-	max := uint16(ctx.NSize*ctx.NSize - 1)
+	max := s.Tnumber(ctx.NSize*ctx.NSize - 1)
 	for _, line := range ctx.Puzzle {
 		for _, nb := range line {
 			if nb < 0 || nb > max {

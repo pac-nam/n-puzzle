@@ -3,8 +3,8 @@ package structures
 import "fmt"
 
 type SVertex struct {
-	X		int		// Coordinate X representing column
-	Y		int		// Coordinate X representing line
+	Y		Tnumber		// Coordinate X representing line
+	X		Tnumber		// Coordinate X representing column
 }
 
 func (v SVertex) String() string {

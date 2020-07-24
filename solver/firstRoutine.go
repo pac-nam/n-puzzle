@@ -11,7 +11,7 @@ func firstRoutine(ctx *s.SContext) {
 		Cost:		0,
 		Zero:		ctx.Zero,
 		Puzzle:		ctx.Puzzle,
-		Path:		[]uint16{0},
+		Path:		[]s.Tnumber{0},
 	}
 	go Algo(&firstNode)
 }
