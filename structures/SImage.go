@@ -4,16 +4,18 @@ import (
 	"fmt"
 )
 
-type SNode struct {
-	Ctx			*SContext
-	Cost		int
-	Zero		SVertex							// coordinates of zero square
-	Puzzle		[][]Tnumber						// puzzle grid
-	Path		[]Tnumber
+type SImage struct {
+	Heuristic int
+	Cost      int
+	NSWE      uint8
+	Zero      SVertex     // coordinates of zero square
+	Puzzle    [][]Tnumber // puzzle grid
+	Path      []Tnumber
 }
 
-func (node SNode) String() string {
-	res := "---------------Snode---------------\n"
+func (node SImage) String() string {
+	res := "---------------SImage---------------\n"
+	res += "Heuristic : " + fmt.Sprint(node.Heuristic)
 	res += "Cost : " + fmt.Sprint(node.Cost) + "\n"
 	// res += "Size : " + fmt.Sprint(node.Ctx.NSize) + "\n"
 	// res += "Final : " + fmt.Sprint(node.Ctx.Final) + "\n"
