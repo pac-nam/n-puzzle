@@ -1,36 +1,36 @@
 package solver
 
 import (
-	s "n-puzzle/structures"
+    s "n-puzzle/structures"
+    // "fmt"
 )
 
-func NewNode(ctx s.SContext) s.SNode {
-	return s.SNode{
-        Heuristic: ctx.Heuristic,
-        Final: ctx.Final,
-        Puzzle: NodeCopyPuzzle(ctx.Puzzle, ctx.NSize),
-        Zero: s.SVertex{X : ctx.Zero.X, Y : ctx.Zero.Y},
-		Size: ctx.NSize,
-	}
-}
-
-func NewNextNode(puzzle [][]int, zero s.SVertex, node s.SNode) s.SNode {
-	return s.SNode{
-		Heuristic : node.Heuristic,
-		Final : node.Final,
-		Puzzle : NodeCopyPuzzle(puzzle, node.Size),
-		Zero : s.SVertex{X : zero.X, Y : zero.Y},
-		Size : node.Size,
-	}
-}
-
-func NodeCopyPuzzle(puzzle [][]int, Size int) [][]int {
-    newPuzzle := make([][]int, Size)
+func CopyPuzzle(puzzle [][]uint16, Size uint16) [][]uint16 {
+    newPuzzle := make([][]uint16, Size)
     for Y, line := range puzzle {
-        newPuzzle[Y] = make([]int, Size)
+        newPuzzle[Y] = make([]uint16, Size)
         for X, nb := range line {
             newPuzzle[Y][X] = nb
         }
     }
     return newPuzzle
+}
+
+func PathCopy(path []uint16) []uint16 {
+	tmp := make([]uint16, len(path))
+	copy(tmp, path)
+	// fmt.Println("old: ", path, "\nnew: ", tmp, "\n")
+	return tmp
+}
+
+func CopyNode(node *s.SNode) *s.SNode {
+    tmp := make([]uint16, len(node.Path))
+    copy(tmp, node.Path)
+	return &s.SNode {
+		Ctx:		node.Ctx,
+		Cost:		node.Cost,
+		Zero:		s.SVertex{X: node.Zero.X, Y: node.Zero.Y},
+		Puzzle:		CopyPuzzle(node.Ctx.Puzzle, node.Ctx.NSize),
+		Path:		PathCopy(tmp),
+	}
 }

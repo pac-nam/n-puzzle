@@ -5,6 +5,7 @@ import (
 	"fmt"
 	s "n-puzzle/structures"
 	"sort"
+	// "time"
 )
 
 func manageRequests(requests s.SRequestSlice, requestChan chan s.SRequest) {
@@ -13,21 +14,35 @@ func manageRequests(requests s.SRequestSlice, requestChan chan s.SRequest) {
 		case request := <- requestChan:
 			requests = append(requests, request)
 		default:
-			break
+			if len(requests) != 0 {
+				goto ForEnd
+			}
 		}
 	}
+	ForEnd:
 	sort.Sort(requests)
-	for i := 0; i < 10; i++ {
+	length := len(requests)
+	// if length > 10000 {
+	// 	for i := 0; i < length; i++ {
+	// 		fmt.Print(requests[i].Score, " ")
+	// 	}
+	// 	time.Sleep(2 * time.Second)
+	// 	panic("exit")
+	// }
+	if length > 1 {
+		length = 1
+	}
+	for i := 0; i < length; i++ {
 		requests[i].Respond <- 1
 	}
-	requests = requests[10:]
-	if len(requests) > 1000 {
-		length := len(requests)
-		for i := 1001; i < length; i++ {
-			requests[i].Respond <- -1
-		}
-		requests = requests[:1000]
-	}
+	requests = requests[length:]
+	// length = len(requests)
+	// if length > 1000 {
+	// 	for i := 1001; i < length; i++ {
+	// 		requests[i].Respond <- -1
+	// 	}
+	// 	requests = requests[:1000]
+	// }
 }
 
 func stopGoRoutines(requests s.SRequestSlice, requestChan chan s.SRequest) {
@@ -36,9 +51,10 @@ func stopGoRoutines(requests s.SRequestSlice, requestChan chan s.SRequest) {
 		case request := <- requestChan:
 			requests = append(requests, request)
 		default:
-			break
+			goto ForEnd
 		}
 	}
+	ForEnd:
 	length := len(requests)
 	for i := 0; i < length; i++ {
 		requests[i].Respond <- -1
@@ -47,24 +63,25 @@ func stopGoRoutines(requests s.SRequestSlice, requestChan chan s.SRequest) {
 
 func finalResult(result s.SResult, requests s.SRequestSlice) {
 	fmt.Println(requests)
-	fmt.Println(result)
+	fmt.Println(result.Res)
 }
 
 func SortHeuristic(ctx *s.SContext) {
-	// var result s.SResult
-	resultChan := make(chan s.SResult, 10)
-	requestChan := make(chan s.SRequest, 400)
-	var requests s.SRequestSlice
-	firstRoutine(ctx, resultChan, requestChan)
+	ctx.ResultChan = make(chan s.SResult, 10)
+	ctx.RequestChan = make(chan s.SRequest, 400)
+	requests := s.SRequestSlice{}
+	firstRoutine(ctx)
+	// fmt.Println("routines launched")
 	for {
 		select {
-		case result := <-resultChan:
-			stopGoRoutines(requests, requestChan)
+		case result := <-ctx.ResultChan:
+			stopGoRoutines(requests, ctx.RequestChan)
 			finalResult(result, requests)
 			return
 		default:
-			manageRequests(requests, requestChan)
+			// fmt.Println("before manage requests")
+			manageRequests(requests, ctx.RequestChan)
 		}
 	}
-	fmt.Println("end")
+	// fmt.Println("end")
 }
