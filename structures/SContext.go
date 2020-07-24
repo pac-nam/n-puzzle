@@ -5,6 +5,7 @@ import (
 )
 
 type Tnumber uint16
+type Tpuzzle [][]Tnumber
 
 type SContext struct {
 	// FileName		string						// string passed in first command line argument

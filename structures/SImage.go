@@ -5,8 +5,9 @@ import (
 )
 
 type SImage struct {
-	Cost      int
-	Puzzle    [][]Tnumber // puzzle grid
+	Cost	int
+	Score	int
+	Puzzle	[][]Tnumber // puzzle grid
 }
 
 func (node SImage) String() string {
