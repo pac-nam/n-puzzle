@@ -11,8 +11,8 @@ type SContext struct {
 	Heuristic		func([][]Tnumber, []SVertex)int	// pointer to the heuristic function choosed by user
 	Final			[]SVertex					// slice filled with coordinates of completed puzzle
 	NSize			Tnumber							// size of the puzzle (NSize * NSize)
-	ResultChan		chan SResult
-	RequestChan		chan SRequest
+	// ResultChan		chan SResult
+	// RequestChan		chan SRequest
 	Puzzle			[][]Tnumber 					// puzzle grid
 	Zero			SVertex						// coordinates of zero square
 }
