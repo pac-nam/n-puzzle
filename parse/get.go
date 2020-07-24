@@ -14,10 +14,12 @@ func getHeuristic(ctx *s.SContext, arg string) string {
 	arg = strings.ToLower(arg)
 	if arg == "manhattan" || arg == "m" || arg == "1" {
 		ctx.Heuristic = heuristic.Manhattan
-	} else if arg == "complete" || arg == "c" || arg == "2" {
+	} else if arg == "haming" || arg == "h" || arg == "2" {
+		ctx.Heuristic = heuristic.Hamming
+	} else if arg == "euclidian" || arg == "e" || arg == "3" {
+		ctx.Heuristic = heuristic.Euclidian
+	} else if arg == "complete" || arg == "c" || arg == "4" {
 		ctx.Heuristic = heuristic.Complete
-	} else if arg == "placement" || arg == "p" || arg == "3" {
-		ctx.Heuristic = heuristic.Placement
 	} else {
 		return m.InvalidHeuristic
 	}
