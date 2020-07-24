@@ -2,8 +2,8 @@ package parse
 
 import (
 	"fmt"
-	solv "n-puzzle/solver"
 	s "n-puzzle/structures"
+	t "n-puzzle/tools"
 )
 
 func distHeuristic(puzzle [][]s.Tnumber, final []s.SVertex) int {
@@ -17,11 +17,11 @@ func distHeuristic(puzzle [][]s.Tnumber, final []s.SVertex) int {
 			}
 		}
 	}
-	return (solv.Abs(int(final[0].X)-x0) + solv.Abs(int(final[0].Y)-y0))
+	return (t.Abs(int(final[0].X)-x0) + t.Abs(int(final[0].Y)-y0))
 }
 
 func checkSolved(ctx *s.SContext) bool {
-	cPuzzle := solv.CopyPuzzle(ctx.Puzzle, ctx.NSize)
+	cPuzzle := t.CopyPuzzle(ctx.Puzzle, ctx.NSize)
 	dist := distHeuristic(cPuzzle, ctx.Final)
 	nbSwap := 0
 	pair := dist % 2

@@ -7,7 +7,22 @@ import (
 	s "n-puzzle/structures"
 	"strconv"
 	"strings"
+	"n-puzzle/heuristic"
 )
+
+func getHeuristic(ctx *s.SContext, arg string) string {
+	arg = strings.ToLower(arg)
+	if arg == "manhattan" || arg == "m" || arg == "1" {
+		ctx.Heuristic = heuristic.Manhattan
+	} else if arg == "complete" || arg == "c" || arg == "2" {
+		ctx.Heuristic = heuristic.Complete
+	} else if arg == "placement" || arg == "p" || arg == "3" {
+		ctx.Heuristic = heuristic.Placement
+	} else {
+		return m.InvalidHeuristic
+	}
+	return ""
+}
 
 func getNSize(scanner *bufio.Scanner) (s.Tnumber, string) {
 	scanner.Scan()
