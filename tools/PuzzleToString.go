@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-func PuzzleToString(puzzle [][]s.Tnumber) string {
+func PuzzleToString(puzzle s.Tpuzzle) string {
 	res := ""
 	for _, line := range puzzle {
 		for _, nb := range line {
@@ -13,4 +13,13 @@ func PuzzleToString(puzzle [][]s.Tnumber) string {
 		}
 	}
 	return res[1:]
+}
+
+func AlreadySeen(puzzle s.Tpuzzle, mSeen map[string]interface{}) bool {
+	stringPuzzle := PuzzleToString(puzzle)
+	if _, exist := mSeen[stringPuzzle]; exist {
+		return true
+	}
+	mSeen[stringPuzzle] = nil
+	return false
 }
