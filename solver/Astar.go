@@ -27,18 +27,7 @@ func goodPlace(stack []s.SImage, newElem s.SImage) []s.SImage {
     return append(stack, newElem)
 }
 
-func whereIsZero(puzzle [][]s.Tnumber) s.SVertex {
-	for y, line := range puzzle {
-		for x, item := range line {
-			if item == 0 {
-				return(s.SVertex{Y: s.Tnumber(y), X: s.Tnumber(x)})
-			}
-		}
-	}
-	return (s.SVertex{Y: s.Tnumber(0), X: s.Tnumber(0)})
-}
-
-func compare(puzzle1, puzzle2[][]s.Tnumber) bool {
+func compare(puzzle1, puzzle2 [][]s.Tnumber) bool {
 	for y, line := range puzzle1 {
 		for x, item := range line {
 			if puzzle2[y][x] != item {
@@ -49,15 +38,15 @@ func compare(puzzle1, puzzle2[][]s.Tnumber) bool {
     return true
 }
 
-func find(slice []s.SImage, puzzle [][]s.Tnumber) (bool, int) {
-    for i, item := range slice {
+func find(slice []s.SImage, puzzle [][]s.Tnumber) (bool) {
+    for _, item := range slice {
         if item.Puzzle != nil {
 			if (compare(item.Puzzle, puzzle) == true) {
-				return true, i
+				return true
 			}
         }
     }
-    return false, -1
+    return false
 }
 
 func Astar(ctx *s.SContext) {
@@ -65,6 +54,7 @@ func Astar(ctx *s.SContext) {
 		Cost :		0,
 		Puzzle :	t.CopyPuzzle(ctx.Puzzle, ctx.NSize),
 		Score :		0,
+		Zero:		ctx.Zero,
 		Move :		0,
 		Father :	nil,
 	}
@@ -91,16 +81,17 @@ func Astar(ctx *s.SContext) {
 			// fmt.Println(opened)
 			father := CoffeeClosed(closed, CurrentImage)
 			neighborgs := exploreNeighborg(CurrentImage, father, ctx)
+			fmt.Println(len(neighborgs))
 			for _, neighborg := range neighborgs {
 				_, existInClosed := closed[t.PuzzleToString(neighborg.Puzzle)]
-				inOpened, _ := find(opened, neighborg.Puzzle)
+				inOpened := find(opened, neighborg.Puzzle)
 				if inOpened == false && existInClosed == false {
 					opened = goodPlace(opened, neighborg)
 				}
 			}
 		}
 	}
-	// fmt.Println(opened, success)
+	fmt.Println(opened)
 	// fmt.Println(find(opened, ctx.Puzzle))
 	// opened = append(opened, ctx.Puzzle)
 	// fmt.Println(opened)
