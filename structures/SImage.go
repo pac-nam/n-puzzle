@@ -10,7 +10,7 @@ type SImage struct {
 	Puzzle	[][]Tnumber // puzzle grid
 	Zero	SVertex
 	Move	Tnumber
-	// Father	*SClosed
+	Father	*SClosed
 }
 
 func (node SImage) String() string {

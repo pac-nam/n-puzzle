@@ -5,7 +5,7 @@ import (
 	t "n-puzzle/tools"
 )
 
-func CoffeeClosed(m map[string]*s.SClosed, image s.SImage) {
+func CoffeeClosed(m map[string]*s.SClosed, image s.SImage) *s.SClosed {
 	stringPuzzle := t.PuzzleToString(image.Puzzle)
 	elem, exist := m[stringPuzzle]
 	if !exist || elem.Cost > image.Cost {
@@ -15,4 +15,5 @@ func CoffeeClosed(m map[string]*s.SClosed, image s.SImage) {
 			Father: image.Father,
 		}
 	}
+	return m[stringPuzzle]
 }

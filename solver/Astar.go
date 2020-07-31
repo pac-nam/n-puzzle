@@ -73,13 +73,11 @@ func Astar(ctx *s.SContext) {
 	opened = append(opened, image)
 	// closed := make([]s.SImage, 0)
 	closed := make(map[string]*s.SClosed)
-	success := false
-	for len(opened) != 0 && success != true {
+	for len(opened) != 0 {
 		CurrentImage := opened[0]
 		opened = opened[1:]
 		heuris := ctx.Heuristic(CurrentImage.Puzzle, ctx.Final)
 		if heuris == 0 {
-			success = true
 			// return CurrentImage
 			fmt.Println("Trouvé")
 			fmt.Println(CurrentImage)
@@ -88,10 +86,11 @@ func Astar(ctx *s.SContext) {
 				fmt.Print(" ", currentClosed.Move)
 				currentClosed = currentClosed.Father
 			}
+			return
 		} else {
 			// fmt.Println(opened)
-			CoffeeClosed(closed, CurrentImage)
-			neighborgs := exploreNeighborg(CurrentImage, ctx)
+			father := CoffeeClosed(closed, CurrentImage)
+			neighborgs := exploreNeighborg(CurrentImage, father, ctx)
 			for _, neighborg := range neighborgs {
 				_, existInClosed := closed[t.PuzzleToString(neighborg.Puzzle)]
 				inOpened, _ := find(opened, neighborg.Puzzle)
