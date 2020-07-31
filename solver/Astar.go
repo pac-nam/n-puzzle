@@ -57,15 +57,19 @@ func Astar(ctx *s.SContext) {
 		Zero:		ctx.Zero,
 		Move :		0,
 		Father :	nil,
+		PuzzleString: t.PuzzleToString(ctx.Puzzle),
 	}
 	fmt.Println(image)
 	opened := make([]s.SImage, 0)
 	opened = append(opened, image)
+	mOpened := make(map[string]interface{})
+	mOpened[image.PuzzleString] = nil
 	// closed := make([]s.SImage, 0)
 	closed := make(map[string]*s.SClosed)
 	for len(opened) != 0 {
 		CurrentImage := opened[0]
 		opened = opened[1:]
+		delete(mOpened, CurrentImage.PuzzleString)
 		heuris := ctx.Heuristic(CurrentImage.Puzzle, ctx.Final)
 		if heuris == 0 {
 			// return CurrentImage
@@ -73,20 +77,26 @@ func Astar(ctx *s.SContext) {
 			fmt.Println(CurrentImage)
 			currentClosed := CurrentImage.Father
 			for currentClosed != nil {
-				fmt.Print(" ", currentClosed.Move)
+				fmt.Print(currentClosed.Move, " ")
 				currentClosed = currentClosed.Father
 			}
+			// for _, elem := range closed {
+			// 	fmt.Println(elem)
+			// }
 			return
 		} else {
 			// fmt.Println(opened)
 			father := CoffeeClosed(closed, CurrentImage)
 			neighborgs := exploreNeighborg(CurrentImage, father, ctx)
-			fmt.Println(len(neighborgs))
-			for _, neighborg := range neighborgs {
-				_, existInClosed := closed[t.PuzzleToString(neighborg.Puzzle)]
-				inOpened := find(opened, neighborg.Puzzle)
-				if inOpened == false && existInClosed == false {
-					opened = goodPlace(opened, neighborg)
+			// fmt.Println(len(neighborgs))
+			for i := range neighborgs {
+				neighborgs[i].PuzzleString = t.PuzzleToString(neighborgs[i].Puzzle)
+				// fmt.Println(neighborgs[i].PuzzleString)
+				_, existInClosed := closed[neighborgs[i].PuzzleString]
+				_, existInOpened := mOpened[neighborgs[i].PuzzleString]
+				if existInOpened == false && existInClosed == false {
+					opened = goodPlace(opened, neighborgs[i])
+					mOpened[neighborgs[i].PuzzleString] = nil
 				}
 			}
 		}

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type Tnumber uint16
+type Tnumber uint8
 type Tpuzzle [][]Tnumber
 
 type SContext struct {
