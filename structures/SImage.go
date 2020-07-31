@@ -8,6 +8,9 @@ type SImage struct {
 	Cost	int
 	Score	int
 	Puzzle	[][]Tnumber // puzzle grid
+	Zero	SVertex
+	Move	Tnumber
+	// Father	*SClosed
 }
 
 func (node SImage) String() string {
