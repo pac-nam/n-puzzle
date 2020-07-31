@@ -7,51 +7,75 @@ import (
 	// h "n-puzzle/heuristic"
 )
 
-func exploreNorth(image s.SImage, zero s.SVertex, ctx *s.SContext, result chan s.SImage) {
+func exploreNorth(image s.SImage, ctx *s.SContext, result chan s.SImage) {
 	newP := t.CopyPuzzle(image.Puzzle, ctx.NSize)
-	Y, X := zero.Y, zero.X
+	Y, X := image.Zero.Y, image.Zero.X
 	newP[Y-1][X], newP[Y][X] = newP[Y][X], newP[Y-1][X]
-	result <- s.SImage {Cost : image.Cost + 1, Puzzle : newP, Score : ctx.Heuristic(newP, ctx.Final) + image.Cost}
+	result <- s.SImage {
+		Cost : image.Cost + 1,
+		Puzzle : newP,
+		Score : ctx.Heuristic(newP, ctx.Final) + image.Cost,
+		Zero : s.SVertex{Y: s.Tnumber(Y-1), X: s.Tnumber(X)},
+		Move : newP[Y][X],
+	}
 }
 
-func exploreSouth(image s.SImage, zero s.SVertex, ctx *s.SContext, result chan s.SImage) {
+func exploreSouth(image s.SImage, ctx *s.SContext, result chan s.SImage) {
 	newP := t.CopyPuzzle(image.Puzzle, ctx.NSize)
-	Y, X := zero.Y, zero.X
+	Y, X := image.Zero.Y, image.Zero.X
 	newP[Y+1][X], newP[Y][X] = newP[Y][X], newP[Y+1][X]
-	result <- s.SImage {Cost : image.Cost + 1, Puzzle : newP, Score : ctx.Heuristic(newP, ctx.Final) + image.Cost}
+	result <- s.SImage {
+		Cost : image.Cost + 1,
+		Puzzle : newP,
+		Score : ctx.Heuristic(newP, ctx.Final) + image.Cost,
+		Zero : s.SVertex{Y: s.Tnumber(Y+1), X: s.Tnumber(X)},
+		Move : newP[Y][X],
+	}
 }
 
-func exploreWest(image s.SImage, zero s.SVertex, ctx *s.SContext, result chan s.SImage) {
+func exploreWest(image s.SImage, ctx *s.SContext, result chan s.SImage) {
 	newP := t.CopyPuzzle(image.Puzzle, ctx.NSize)
-	Y, X := zero.Y, zero.X
+	Y, X := image.Zero.Y, image.Zero.X
 	newP[Y][X-1], newP[Y][X] = newP[Y][X], newP[Y][X-1]
-	result <- s.SImage {Cost : image.Cost + 1, Puzzle : newP, Score : ctx.Heuristic(newP, ctx.Final) + image.Cost}
+	result <- s.SImage {
+		Cost : image.Cost + 1,
+		Puzzle : newP,
+		Score : ctx.Heuristic(newP, ctx.Final) + image.Cost,
+		Zero : s.SVertex{Y: s.Tnumber(Y), X: s.Tnumber(X-1)},
+		Move : newP[Y][X],
+	}
 }
 
-func exploreEast(image s.SImage, zero s.SVertex, ctx *s.SContext, result chan s.SImage) {
+func exploreEast(image s.SImage, ctx *s.SContext, result chan s.SImage) {
 	newP := t.CopyPuzzle(image.Puzzle, ctx.NSize)
-	Y, X := zero.Y, zero.X
+	Y, X := image.Zero.Y, image.Zero.X
 	newP[Y][X+1], newP[Y][X] = newP[Y][X], newP[Y][X+1]
-	result <- s.SImage {Cost : image.Cost + 1, Puzzle : newP, Score : ctx.Heuristic(newP, ctx.Final) + image.Cost}
+	result <- s.SImage {
+		Cost : image.Cost + 1,
+		Puzzle : newP,
+		Score : ctx.Heuristic(newP, ctx.Final) + image.Cost,
+		Zero : s.SVertex{Y: s.Tnumber(Y), X: s.Tnumber(X+1)},
+		Move : newP[Y][X],
+	}
 }
 
-func exploreNeighborg(image s.SImage, zero s.SVertex, ctx *s.SContext) []s.SImage {
-	nswe, pathNb := whereToGo(image.Puzzle, zero.X, zero.Y, ctx.NSize, 0)
+func exploreNeighborg(image s.SImage, ctx *s.SContext) []s.SImage {
+	nswe, pathNb := whereToGo(image.Puzzle, image.Zero.X, image.Zero.Y, ctx.NSize, 0)
 	neighborg := make([]s.SImage, pathNb)
 	resultChan := make(chan s.SImage, 4)
 	for i := 0; nswe != 0; i++ {
 		if nswe & NORTH != 0 {
 			nswe -= NORTH
-			go exploreNorth(image, zero, ctx, resultChan)
+			go exploreNorth(image, ctx, resultChan)
 		} else if nswe & SOUTH != 0 {
 			nswe -= SOUTH
-			go exploreSouth(image, zero, ctx, resultChan)
+			go exploreSouth(image, ctx, resultChan)
 		} else if nswe & WEST != 0 {
 			nswe -= WEST
-			go exploreWest(image, zero, ctx, resultChan)
+			go exploreWest(image, ctx, resultChan)
 		} else if nswe & EAST != 0 {
 			nswe -= EAST
-			go exploreEast(image, zero, ctx, resultChan)
+			go exploreEast(image, ctx, resultChan)
 			
 		}
 	}
