@@ -4,7 +4,6 @@ import (
 	"fmt"
 	s "n-puzzle/structures"
 	t "n-puzzle/tools"
-	h "n-puzzle/heuristic"
 )
 
 func goodPlace(stack []s.SImage, newElem s.SImage) []s.SImage {
@@ -39,33 +38,6 @@ func whereIsZero(puzzle [][]s.Tnumber) s.SVertex {
 	return (s.SVertex{Y: s.Tnumber(0), X: s.Tnumber(0)})
 }
 
-func exploreNeighborg(image s.SImage, zero s.SVertex, ctx *s.SContext) []s.SImage {
-	puzzle := image.Puzzle
-	nswe, pathNb := whereToGo(puzzle, zero.X, zero.Y, ctx.NSize, 0)
-	neighborg := make([]s.SImage, pathNb)
-	for i := 0; nswe != 0; i++ {
-		newP := t.CopyPuzzle(puzzle, ctx.NSize)
-		Y, X := zero.Y, zero.X
-		if nswe & NORTH != 0 {
-			nswe -= NORTH
-			newP[Y-1][X], newP[Y][X] = newP[Y][X], newP[Y-1][X]
-		} else if nswe & SOUTH != 0 {
-			nswe -= SOUTH
-			newP[Y+1][X], newP[Y][X] = newP[Y][X], newP[Y+1][X]
-		} else if nswe & WEST != 0 {
-			nswe -= WEST
-			newP[Y][X-1], newP[Y][X] = newP[Y][X], newP[Y][X-1]
-		} else if nswe & EAST != 0 {
-			nswe -= EAST
-			newP[Y][X+1], newP[Y][X] = newP[Y][X], newP[Y][X+1]
-			
-		}
-		newImage := s.SImage {Cost : image.Cost, Puzzle : newP, Score : ctx.Heuristic(newP, ctx.Final) + image.Cost}
-		neighborg[i] = newImage
-	}
-	return neighborg
-}
-
 func compare(puzzle1, puzzle2[][]s.Tnumber) bool {
 	for y, line := range puzzle1 {
 		for x, item := range line {
@@ -90,44 +62,41 @@ func find(slice []s.SImage, puzzle [][]s.Tnumber) (bool, int) {
 
 func Astar(ctx *s.SContext) {
 	image := s.SImage {
-		Cost : 0,
-		Puzzle : t.CopyPuzzle(ctx.Puzzle, ctx.NSize),
-		Score : 0,
+		Cost :		0,
+		Puzzle :	t.CopyPuzzle(ctx.Puzzle, ctx.NSize),
+		Score :		0,
+		Move :		0,
+		Father :	nil,
 	}
 	fmt.Println(image)
 	opened := make([]s.SImage, 0)
 	opened = append(opened, image)
-	closed := make([]s.SImage, 0)
+	// closed := make([]s.SImage, 0)
+	closed := make(map[string]*s.SClosed)
 	success := false
 	for len(opened) != 0 && success != true {
-		u := opened[0]
-		heuris := ctx.Heuristic(u.Puzzle, ctx.Final)
-		if h.Complete(u.Puzzle, ctx.Final) == 0 {
+		CurrentImage := opened[0]
+		opened = opened[1:]
+		heuris := ctx.Heuristic(CurrentImage.Puzzle, ctx.Final)
+		if heuris == 0 {
 			success = true
+			// return CurrentImage
 			fmt.Println("Trouvé")
-			fmt.Println(u)
+			fmt.Println(CurrentImage)
+			currentClosed := CurrentImage.Father
+			for currentClosed != nil {
+				fmt.Print(" ", currentClosed.Move)
+				currentClosed = currentClosed.Father
+			}
 		} else {
-			opened = opened[1:]
 			// fmt.Println(opened)
-			closed = append(closed, u)
-			zero := whereIsZero(u.Puzzle)
-			neighborgs := exploreNeighborg(u, zero, ctx)
+			CoffeeClosed(closed, CurrentImage)
+			neighborgs := exploreNeighborg(CurrentImage, ctx)
 			for _, neighborg := range neighborgs {
-				inClosed, iInClosed := find(closed, neighborg.Puzzle)
+				_, existInClosed := closed[t.PuzzleToString(neighborg.Puzzle)]
 				inOpened, _ := find(opened, neighborg.Puzzle)
-				if inOpened == false && inClosed == false {
-					neighborg.Cost = u.Cost + 1
+				if inOpened == false && existInClosed == false {
 					opened = goodPlace(opened, neighborg)
-				} else {
-					heuris = ctx.Heuristic(neighborg.Puzzle, ctx.Final)
-					neighborg.Cost = u.Cost + 1
-					if heuris + neighborg.Cost > u.Cost + heuris + 1 {
-						neighborg.Cost = u.Cost + 1
-						if inClosed == true {
-							opened = goodPlace(opened, closed[iInClosed])
-							closed = append(closed[:iInClosed], closed[iInClosed+1:]...)
-						}
-					}
 				}
 			}
 		}
