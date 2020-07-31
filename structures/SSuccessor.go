@@ -7,6 +7,8 @@ package structures
 type SSuccessor struct {
 	Heuristic		int
 	NSWE			int
+	PuzzleString	string
+	Move			Tnumber
 }
 
 type Tsuccessors []SSuccessor

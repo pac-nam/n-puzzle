@@ -2,6 +2,7 @@ package tools
 
 import (
 	s "n-puzzle/structures"
+	"sort"
 	// "fmt"
 )
 
@@ -12,23 +13,65 @@ const (
 	EAST = 1 << iota
 )
 
-func WhereToGo(puzzle s.Tpuzzle, X, Y, NSize, last s.Tnumber) (uint8, uint8) {
-	var NSWE, pathNb uint8 = 0, 0
-	if Y != 0 && puzzle[Y-1][X] != last {
-		NSWE |= NORTH
-		pathNb++
+func WhereToGo(ctx *s.SContext, m map[string]interface{}) (s.Tsuccessors) {
+	Y, X := ctx.Zero.Y, ctx.Zero.X
+	var list s.Tsuccessors
+	if Y != 0 {
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y-1][X] = ctx.Puzzle[Y-1][X], ctx.Puzzle[Y][X]
+		puzzleString := PuzzleToString(ctx.Puzzle)
+		_, exist := m[puzzleString]
+		if !exist {
+			list = append(list, s.SSuccessor{
+				Heuristic: ctx.Heuristic(ctx.Puzzle, ctx.Final),
+				NSWE: NORTH,
+				PuzzleString: puzzleString,
+				Move: ctx.Puzzle[Y][X],
+			})
+		}
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y-1][X] = ctx.Puzzle[Y-1][X], ctx.Puzzle[Y][X]
 	}
-	if Y != NSize - 1 && puzzle[Y+1][X] != last {
-		NSWE |= SOUTH
-		pathNb++
+	if Y != ctx.NSize - 1 {
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y+1][X] = ctx.Puzzle[Y+1][X], ctx.Puzzle[Y][X]
+		puzzleString := PuzzleToString(ctx.Puzzle)
+		_, exist := m[puzzleString]
+		if !exist {
+			list = append(list, s.SSuccessor {
+				Heuristic: ctx.Heuristic(ctx.Puzzle, ctx.Final),
+				NSWE: SOUTH,
+				PuzzleString: puzzleString,
+				Move: ctx.Puzzle[Y][X],
+			})
+		}
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y+1][X] = ctx.Puzzle[Y+1][X], ctx.Puzzle[Y][X]
 	}
-	if X != 0 && puzzle[Y][X-1] != last {
-		NSWE |= WEST
-		pathNb++
+	if X != 0 {
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y][X-1] = ctx.Puzzle[Y][X-1], ctx.Puzzle[Y][X]
+		puzzleString := PuzzleToString(ctx.Puzzle)
+		_, exist := m[puzzleString]
+		if !exist {
+			list = append(list, s.SSuccessor{
+				Heuristic: ctx.Heuristic(ctx.Puzzle, ctx.Final),
+				NSWE: WEST,
+				PuzzleString: puzzleString,
+				Move: ctx.Puzzle[Y][X],
+			})
+		}
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y][X-1] = ctx.Puzzle[Y][X-1], ctx.Puzzle[Y][X]
 	}
-	if X != NSize - 1 && puzzle[Y][X+1] != last {
-		NSWE |= EAST
-		pathNb++
+	if X != ctx.NSize - 1 {
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y][X+1] = ctx.Puzzle[Y][X+1], ctx.Puzzle[Y][X]
+		puzzleString := PuzzleToString(ctx.Puzzle)
+		_, exist := m[puzzleString]
+		if !exist {
+			list = append(list, s.SSuccessor{
+				Heuristic: ctx.Heuristic(ctx.Puzzle, ctx.Final),
+				NSWE: EAST,
+				PuzzleString: puzzleString,
+				Move: ctx.Puzzle[Y][X],
+			})
+		}
+		ctx.Puzzle[Y][X], ctx.Puzzle[Y][X+1] = ctx.Puzzle[Y][X+1], ctx.Puzzle[Y][X]
 	}
-	return NSWE, pathNb
+	sort.Sort(list)
+	return list
 }
