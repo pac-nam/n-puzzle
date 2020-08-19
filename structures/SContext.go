@@ -14,8 +14,22 @@ type SContext struct {
 	NSize			Tnumber							// size of the puzzle (NSize * NSize)
 	// ResultChan		chan SResult
 	// RequestChan		chan SRequest
-	Puzzle			[][]Tnumber 					// puzzle grid
+	Puzzle			Tpuzzle 					// puzzle grid
 	Zero			SVertex						// coordinates of zero square
+}
+
+func (puzzle Tpuzzle) String() string {
+	NSize := len(puzzle)
+	res := "Puzzle: {\n"
+	formatPuzzle := "%0" + fmt.Sprint(len(fmt.Sprint(NSize * NSize))) + "d "
+	for _, tab := range puzzle {
+		res += "\t"
+		for _, nb := range tab {
+			res += fmt.Sprintf(formatPuzzle, nb)
+		}
+		res += "\n"
+	}
+	return res + "}"
 }
 
 func (ctx SContext) String() string {
@@ -24,16 +38,8 @@ func (ctx SContext) String() string {
 	// res += fmt.Sprintln("Heuristic:", ctx.Heuristic)
 	res += "Zero: " + fmt.Sprint(ctx.Zero) + "\n"
 	res += "NSize: " + fmt.Sprint(ctx.NSize) + "\n"
-	res += "Puzzle: {\n"
-	formatPuzzle := "%0" + fmt.Sprint(len(fmt.Sprint(ctx.NSize * ctx.NSize))) + "d "
-	for _, tab := range ctx.Puzzle {
-		res += "\t"
-		for _, nb := range tab {
-			res += fmt.Sprintf(formatPuzzle, nb)
-		}
-		res += "\n"
-	}
-	res += "}\nFinal: " + fmt.Sprint(ctx.Final)
+	res += fmt.Sprint(ctx.Puzzle)
+	res += "\nFinal: " + fmt.Sprint(ctx.Final)
 	res += "\n--------------------------------------"
 	return res
 }
