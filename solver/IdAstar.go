@@ -1,7 +1,6 @@
 package solver
 
 import (
-	"fmt"
 	s "n-puzzle/structures"
 	t "n-puzzle/tools"
 )
@@ -10,7 +9,6 @@ func IdAstar(ctx *s.SContext) s.SResult {
 	bound := ctx.Heuristic(ctx.Puzzle, ctx.Final)
 	CopyPuzzle := t.CopyPuzzle(ctx.Puzzle, ctx.NSize)
 	res := s.SResult{TimeComplexity: 0, SizeComplexityMax: 1}
-	fmt.Println(ctx)
 	m := make(map[string]interface{})
 	for {
 		path, score := search(ctx, 0, bound, m, &res.TimeComplexity,
@@ -20,7 +18,6 @@ func IdAstar(ctx *s.SContext) s.SResult {
 			PuzzleString: t.PuzzleToString(ctx.Puzzle),
 		})
 		if score == 0 {
-			// fmt.Println(path[1:], len(path))
 			ctx.Puzzle = CopyPuzzle
 			res.Sequence = path[1:]
 			for i, j := 0, len(res.Sequence)-1; i < j; i, j = i+1, j-1 {

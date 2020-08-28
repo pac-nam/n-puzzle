@@ -16,7 +16,7 @@ func findNumber(puzzle s.Tpuzzle, search s.Tnumber) s.SVertex {
 	return s.SVertex{X: 0, Y: 0}
 }
 
-func Checker(ctx *s.SContext, path []s.Tnumber) {
+func Checker(ctx *s.SContext, path []s.Tnumber, VChecker bool) {
 	fmt.Println("-------------------------Checker-------------------------")
 	fmt.Println(ctx.Puzzle)
 	// fmt.Println("Sequence: ", path)
@@ -35,7 +35,9 @@ func Checker(ctx *s.SContext, path []s.Tnumber) {
 			fmt.Println(copyPuzzle)
 			return
 		}
-		// fmt.Println(copyPuzzle)
+		if VChecker == true {
+			fmt.Println(copyPuzzle)
+		}
 	}
 	if ctx.Heuristic(copyPuzzle, ctx.Final) == 0 {
 		fmt.Println("Check success")

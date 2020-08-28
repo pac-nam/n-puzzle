@@ -11,7 +11,7 @@ type SResult struct {
 }
 
 func (res SResult) String() string {
-	return fmt.Sprintf("Time Complexity: %v\nSize Complexity: %v\nSequence length: %v\nSequence: %v\n",
+	return fmt.Sprintf("Time Complexity: %v\nSize Complexity: %v\nSequence length: %v\nSequence: %v",
 	res.TimeComplexity,
 	res.SizeComplexityMax,
 	len(res.Sequence),
