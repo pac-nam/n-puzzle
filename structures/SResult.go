@@ -5,15 +5,15 @@ import (
 )
 
 type SResult struct {
-	TimeComplexity	uint
-	SizeComplexity	uint
+	TimeComplexity		uint
+	SizeComplexityMax	uint
 	Sequence		[]Tnumber
 }
 
 func (res SResult) String() string {
-	return fmt.Sprintf("Time Complexity: %T\nSize Complexity: %T\nSequence length: %T\n Sequence: %T\n",
+	return fmt.Sprintf("Time Complexity: %v\nSize Complexity: %v\nSequence length: %v\nSequence: %v\n",
 	res.TimeComplexity,
-	res.SizeComplexity,
+	res.SizeComplexityMax,
 	len(res.Sequence),
 	res.Sequence)
 }

@@ -1,7 +1,6 @@
 package solver
 
 import (
-	"fmt"
 	s "n-puzzle/structures"
 	t "n-puzzle/tools"
 )
@@ -49,7 +48,7 @@ func find(slice []s.SImage, puzzle [][]s.Tnumber) (bool) {
     return false
 }
 
-func Astar(ctx *s.SContext) {
+func Astar(ctx *s.SContext) s.SResult {
 	image := s.SImage {
 		Cost :		0,
 		Puzzle :	t.CopyPuzzle(ctx.Puzzle, ctx.NSize),
@@ -59,52 +58,47 @@ func Astar(ctx *s.SContext) {
 		Father :	nil,
 		PuzzleString: t.PuzzleToString(ctx.Puzzle),
 	}
-	fmt.Println(image)
 	opened := make([]s.SImage, 0)
 	opened = append(opened, image)
 	mOpened := make(map[string]interface{})
 	mOpened[image.PuzzleString] = nil
 	// closed := make([]s.SImage, 0)
 	closed := make(map[string]*s.SClosed)
+	res := s.SResult{TimeComplexity: uint(len(opened))}
 	for len(opened) != 0 {
 		CurrentImage := opened[0]
+		if uint(len(closed) + len(opened)) > res.SizeComplexityMax {
+			res.SizeComplexityMax = uint(len(closed) + len(opened))
+		}
 		opened = opened[1:]
 		delete(mOpened, CurrentImage.PuzzleString)
 		heuris := ctx.Heuristic(CurrentImage.Puzzle, ctx.Final)
 		if heuris == 0 {
-			// return CurrentImage
-			fmt.Println("Trouvé")
-			fmt.Println(CurrentImage)
 			currentClosed := CurrentImage.Father
+			res.Sequence = []s.Tnumber{CurrentImage.Move}
 			for currentClosed != nil {
-				fmt.Print(currentClosed.Move, " ")
+				res.Sequence = append(res.Sequence, currentClosed.Move)
 				currentClosed = currentClosed.Father
 			}
-			// for _, elem := range closed {
-			// 	fmt.Println(elem)
-			// }
-			return
+			for i, j := 0, len(res.Sequence)-1; i < j; i, j = i+1, j-1 {
+				res.Sequence[i], res.Sequence[j] = res.Sequence[j], res.Sequence[i]
+			}
+			res.Sequence = res.Sequence[1:]
+			return res
 		} else {
-			// fmt.Println(opened)
 			father := CoffeeClosed(closed, CurrentImage)
 			neighborgs := exploreNeighborg(CurrentImage, father, ctx)
-			// fmt.Println(len(neighborgs))
 			for i := range neighborgs {
 				neighborgs[i].PuzzleString = t.PuzzleToString(neighborgs[i].Puzzle)
-				// fmt.Println(neighborgs[i].PuzzleString)
 				_, existInClosed := closed[neighborgs[i].PuzzleString]
 				_, existInOpened := mOpened[neighborgs[i].PuzzleString]
 				if existInOpened == false && existInClosed == false {
+					res.TimeComplexity++
 					opened = goodPlace(opened, neighborgs[i])
 					mOpened[neighborgs[i].PuzzleString] = nil
 				}
 			}
 		}
 	}
-	fmt.Println(opened)
-	// fmt.Println(find(opened, ctx.Puzzle))
-	// opened = append(opened, ctx.Puzzle)
-	// fmt.Println(opened)
-	// opened = opened[:1]
-	// fmt.Println(opened)
+	return res
 }

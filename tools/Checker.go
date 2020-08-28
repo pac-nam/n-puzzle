@@ -19,7 +19,7 @@ func findNumber(puzzle s.Tpuzzle, search s.Tnumber) s.SVertex {
 func Checker(ctx *s.SContext, path []s.Tnumber) {
 	fmt.Println("-------------------------Checker-------------------------")
 	fmt.Println(ctx.Puzzle)
-	fmt.Println("Sequence: ", path)
+	// fmt.Println("Sequence: ", path)
 	copyPuzzle := CopyPuzzle(ctx.Puzzle, ctx.NSize)
 	zero := findNumber(copyPuzzle, 0)
 	for _, toSwap := range path {
@@ -33,7 +33,9 @@ func Checker(ctx *s.SContext, path []s.Tnumber) {
 		} else {
 			fmt.Println("wrong move trying to swap", toSwap, "in the puzzle:")
 			fmt.Println(copyPuzzle)
+			return
 		}
+		// fmt.Println(copyPuzzle)
 	}
 	if ctx.Heuristic(copyPuzzle, ctx.Final) == 0 {
 		fmt.Println("Check success")

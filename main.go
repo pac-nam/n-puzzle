@@ -17,7 +17,7 @@ func main() {
 	// ctx.Heuristic(ctx)
 	// fmt.Println(solver.HeuristicPlacement(ctx))
 	// fmt.Println(ctx, "Normal end")
-	res := solve.IdAstar(ctx)
+	res := solve.Astar(ctx)
 	fmt.Println(res)
-	t.Checker(ctx, res)
+	t.Checker(ctx, res.Sequence)
 }

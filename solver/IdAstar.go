@@ -6,13 +6,15 @@ import (
 	t "n-puzzle/tools"
 )
 
-func IdAstar(ctx *s.SContext) []s.Tnumber {
+func IdAstar(ctx *s.SContext) s.SResult {
 	bound := ctx.Heuristic(ctx.Puzzle, ctx.Final)
 	CopyPuzzle := t.CopyPuzzle(ctx.Puzzle, ctx.NSize)
+	res := s.SResult{TimeComplexity: 0, SizeComplexityMax: 1}
 	fmt.Println(ctx)
 	m := make(map[string]interface{})
 	for {
-		path, score := search(ctx, 0, bound, m, s.SSuccessor{
+		path, score := search(ctx, 0, bound, m, &res.TimeComplexity,
+			s.SSuccessor {
 			Heuristic: ctx.Heuristic(ctx.Puzzle, ctx.Final),
 			NSWE: 0,
 			PuzzleString: t.PuzzleToString(ctx.Puzzle),
@@ -20,19 +22,20 @@ func IdAstar(ctx *s.SContext) []s.Tnumber {
 		if score == 0 {
 			// fmt.Println(path[1:], len(path))
 			ctx.Puzzle = CopyPuzzle
-			path = path[1:]
-			for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
-				path[i], path[j] = path[j], path[i]
+			res.Sequence = path[1:]
+			for i, j := 0, len(res.Sequence)-1; i < j; i, j = i+1, j-1 {
+				res.Sequence[i], res.Sequence[j] = res.Sequence[j], res.Sequence[i]
 			}
-			return path
+			return res
 		}
 		bound = score
 	}
-	return []s.Tnumber{}
+	return res
 }
 
-func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, father s.SSuccessor) ([]s.Tnumber, int) {
+func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, Complexity *uint, father s.SSuccessor) ([]s.Tnumber, int) {
 	// fmt.Println(ctx)
+	*Complexity++
 	if father.Heuristic == 0 {
 		return make([]s.Tnumber, 1), 0
 	} else if cost + father.Heuristic > costMax {
@@ -54,7 +57,7 @@ func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, father
 			ctx.Zero.X = X + 1
 		}
 		ctx.Puzzle[ctx.Zero.Y][ctx.Zero.X], ctx.Puzzle[Y][X] = ctx.Puzzle[Y][X], ctx.Puzzle[ctx.Zero.Y][ctx.Zero.X]
-		path, score := search(ctx, cost + 1, costMax, m, neighborg)
+		path, score := search(ctx, cost + 1, costMax, m, Complexity, neighborg)
 		if score == 0 {
 			return append(path, neighborg.Move), 0
 		} else if score < min {
