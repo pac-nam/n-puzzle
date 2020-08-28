@@ -6,13 +6,6 @@ import (
 	// "fmt"
 )
 
-const (
-	NORTH = 1 << iota
-	SOUTH = 1 << iota
-	WEST = 1 << iota
-	EAST = 1 << iota
-)
-
 func IdWhereToGo(ctx *s.SContext, m map[string]interface{}) (s.Tsuccessors) {
 	Y, X := ctx.Zero.Y, ctx.Zero.X
 	var list s.Tsuccessors
