@@ -11,7 +11,7 @@ func IdAstar(ctx *s.SContext) s.SResult {
 	res := s.SResult{TimeComplexity: 0, SizeComplexityMax: 1}
 	m := make(map[string]interface{})
 	for {
-		path, score := search(ctx, 0, bound, m, &res.TimeComplexity,
+		path, score := search(ctx, 0, bound, m, &res,
 			s.SSuccessor {
 			Heuristic: ctx.Heuristic(ctx.Puzzle, ctx.Final),
 			NSWE: 0,
@@ -30,8 +30,8 @@ func IdAstar(ctx *s.SContext) s.SResult {
 	return res
 }
 
-func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, Complexity *uint, father s.SSuccessor) ([]s.Tnumber, int) {
-	*Complexity++
+func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, res *s.SResult, father s.SSuccessor) ([]s.Tnumber, int) {
+	res.TimeComplexity++
 	if father.Heuristic == 0 {
 		return make([]s.Tnumber, 1), 0
 	} else if cost + father.Heuristic > costMax {
@@ -53,7 +53,10 @@ func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, Comple
 			ctx.Zero.X = X + 1
 		}
 		ctx.Puzzle[ctx.Zero.Y][ctx.Zero.X], ctx.Puzzle[Y][X] = ctx.Puzzle[Y][X], ctx.Puzzle[ctx.Zero.Y][ctx.Zero.X]
-		path, score := search(ctx, cost + 1, costMax, m, Complexity, neighborg)
+		path, score := search(ctx, cost + 1, costMax, m, res, neighborg)
+		if uint(len(m)) >= res.SizeComplexityMax {
+			res.SizeComplexityMax = uint(len(m)) + 1
+		}
 		if score == 0 {
 			return append(path, neighborg.Move), 0
 		} else if score < min {
