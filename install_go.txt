@@ -1,0 +1,10 @@
+install golang:
+download the file "go1.15.2.linux-amd64.tar.gz" on https://golang.org/dl/
+tar -C /usr/local -xzf go1.15.2.linux-amd64.tar.gz
+export PATH=$PATH:/usr/local/go/bin
+go version
+mkdir -p ~/go/src
+cd ~/go/src
+export GOPATH=~/go
+
+clone the repository in ~/go/src
