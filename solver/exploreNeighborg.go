@@ -1,10 +1,8 @@
 package solver
 
 import (
-	// "fmt"
 	s "n-puzzle/structures"
 	t "n-puzzle/tools"
-	// h "n-puzzle/heuristic"
 )
 
 func exploreNorth(image s.SImage, ctx *s.SContext, result chan s.SImage, father *s.SClosed) {
@@ -67,8 +65,6 @@ func exploreNeighborg(image s.SImage, father *s.SClosed, ctx *s.SContext) []s.SI
 	nswe, pathNb := whereToGo(image.Puzzle, image.Zero.X, image.Zero.Y, ctx.NSize, 0)
 	neighborg := make([]s.SImage, pathNb)
 	resultChan := make(chan s.SImage, pathNb)
-	// fmt.Println(pathNb)
-	// panic("lol")
 	for i := 0; nswe != 0; i++ {
 		if nswe & NORTH != 0 {
 			nswe -= NORTH

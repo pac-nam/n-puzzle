@@ -3,7 +3,6 @@ package tools
 import (
 	s "n-puzzle/structures"
 	"sort"
-	// "fmt"
 )
 
 const (

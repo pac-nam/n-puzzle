@@ -8,14 +8,11 @@ type Tnumber uint8
 type Tpuzzle [][]Tnumber
 
 type SContext struct {
-	// FileName		string						// string passed in first command line argument
 	Heuristic		func([][]Tnumber, []SVertex)int	// pointer to the heuristic function choosed by user
-	Final			[]SVertex					// slice filled with coordinates of completed puzzle
+	Final			[]SVertex						// slice filled with coordinates of completed puzzle
 	NSize			Tnumber							// size of the puzzle (NSize * NSize)
-	// ResultChan		chan SResult
-	// RequestChan		chan SRequest
-	Puzzle			Tpuzzle 					// puzzle grid
-	Zero			SVertex						// coordinates of zero square
+	Puzzle			Tpuzzle 						// puzzle grid
+	Zero			SVertex							// coordinates of zero square
 }
 
 func (puzzle Tpuzzle) String() string {
@@ -34,8 +31,6 @@ func (puzzle Tpuzzle) String() string {
 
 func (ctx SContext) String() string {
 	res := "---------------SContext---------------\n"
-	// res += "FileName: \"" + ctx.FileName + "\"\n"
-	// res += fmt.Sprintln("Heuristic:", ctx.Heuristic)
 	res += "Zero: " + fmt.Sprint(ctx.Zero) + "\n"
 	res += "NSize: " + fmt.Sprint(ctx.NSize) + "\n"
 	res += fmt.Sprint(ctx.Puzzle)

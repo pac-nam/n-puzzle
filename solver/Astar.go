@@ -62,7 +62,6 @@ func Astar(ctx *s.SContext) s.SResult {
 	opened = append(opened, image)
 	mOpened := make(map[string]interface{})
 	mOpened[image.PuzzleString] = nil
-	// closed := make([]s.SImage, 0)
 	closed := make(map[string]*s.SClosed)
 	res := s.SResult{TimeComplexity: uint(len(opened))}
 	for len(opened) != 0 {

@@ -31,7 +31,6 @@ func IdAstar(ctx *s.SContext) s.SResult {
 }
 
 func search(ctx *s.SContext, cost, costMax int, m map[string]interface{}, Complexity *uint, father s.SSuccessor) ([]s.Tnumber, int) {
-	// fmt.Println(ctx)
 	*Complexity++
 	if father.Heuristic == 0 {
 		return make([]s.Tnumber, 1), 0

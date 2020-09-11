@@ -19,7 +19,6 @@ func findNumber(puzzle s.Tpuzzle, search s.Tnumber) s.SVertex {
 func Checker(ctx *s.SContext, path []s.Tnumber, VChecker bool) {
 	fmt.Println("-------------------------Checker-------------------------")
 	fmt.Println(ctx.Puzzle)
-	// fmt.Println("Sequence: ", path)
 	copyPuzzle := CopyPuzzle(ctx.Puzzle, ctx.NSize)
 	zero := findNumber(copyPuzzle, 0)
 	for _, toSwap := range path {
