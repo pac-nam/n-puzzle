@@ -42,6 +42,8 @@ func getNSize(scanner *bufio.Scanner) (s.Tnumber, string) {
 	nb, err := strconv.Atoi(tab[0])
 	if err != nil {
 		return 0, m.AtoiError
+	} else if nb < 0 {
+		return 0, "negative number"
 	}
 	return s.Tnumber(nb), ""
 }
@@ -66,6 +68,8 @@ func getPuzzle(scanner *bufio.Scanner, ctx *s.SContext) string {
 			nb, err := strconv.Atoi(str)
 			if err != nil {
 				return m.AtoiError
+			} else if nb < 0 {
+				return "negative number"
 			}
 			ctx.Puzzle[index][j] = s.Tnumber(nb)
 			if nb == 0 {
